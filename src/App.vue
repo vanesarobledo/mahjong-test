@@ -1,19 +1,9 @@
 <script setup lang="ts">
 import {UseDraggable as Draggable} from '@vueuse/components'
 import {ref} from "vue";
+import {Tiles} from '@/data/tiles.js'
 
-const tiles = ref(
-    [
-      {
-        id: 0,
-        src: '/img/tiles/Pin1.svg',
-      },
-      {
-        id: 1,
-        src: '/img/tiles/Pin2.svg',
-      }
-    ]
-)
+const tiles = ref(Tiles)
 
 // computed property for positions
 
@@ -22,6 +12,7 @@ const tiles = ref(
 <template>
   <h1>Mahjong Test</h1>
 
+  <div style="display: flex">
   <Draggable
       v-for="tile in tiles"
       :key="tile.id"
@@ -31,6 +22,7 @@ const tiles = ref(
   >
     <img :src="tile.src" alt="tile" />
   </Draggable>
+  </div>
 
 </template>
 
@@ -39,9 +31,9 @@ const tiles = ref(
   position: fixed;
   width: 25px;
   height: 36px;
-  border: 1px solid #ccc;
-  border-radius: 2px;
+  border-radius: 3px;
   padding: 5px;
+  background: center / contain no-repeat url('/img/tiles/Front.svg');
 }
 .tile img {
   width: 100%;
