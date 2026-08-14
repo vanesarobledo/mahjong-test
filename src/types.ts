@@ -1,0 +1,15 @@
+export type Tile = {
+    id: number;
+    src: string;
+    name: string;
+    rotationY: number;
+    isFaceUp: boolean;
+    x: number,
+    y: number,
+};
+
+export type TileData = {
+    id: number;
+    src: string;
+    name: string;
+}

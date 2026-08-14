@@ -1,4 +1,6 @@
-export const Tiles = [
+import type { TileData } from '@/types.ts'
+
+export const Tiles : Array<TileData> = [
   {
     "id": 0,
     "src": "/img/tiles/Man1.svg",

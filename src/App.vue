@@ -1,7 +1,8 @@
 <script setup lang="ts">
 import { ref, useTemplateRef } from "vue";
-import { Tiles } from '@/data/tiles.js'
+import { Tiles } from '@/data/tiles'
 import TileDraggable from "@/components/TileDraggable.vue";
+import type {Tile} from "@/types.ts";
 
 const boardRef = useTemplateRef('board')
 const tiles = ref(
@@ -30,23 +31,18 @@ function getInitializedPosition(index : number) {
   }
 }
 
-function flipTile(tile) {
+function flipTile(tile : Tile) {
   tile.isFaceUp = !tile.isFaceUp
   tile.rotationY = tile.isFaceUp ? 0: 180
 }
 
-function bringToFront(tile) {
+function bringToFront(tile : Tile) {
   const index = tiles.value.indexOf(tile);
   tiles.value.splice(index, 1)
   tiles.value.push(tile)
 }
 
 function orderTiles() {
-  const board = boardRef.value;
-  const boardWidth = board.clientWidth
-  const boardHeight = board.clientHeight
-  const tileWidth = 25, tileHeight = 36
-
   tiles.value.forEach(tile => {
     const pos = getInitializedPosition(tile.id)
     tile.rotationY = 0
@@ -58,8 +54,8 @@ function orderTiles() {
 
 function resetGame() {
   const board = boardRef.value;
-  const boardWidth = board.clientWidth
-  const boardHeight = board.clientHeight
+  const boardWidth = board ? board.clientWidth : 800;
+  const boardHeight = board ? board.clientHeight : 1000;
   const tileWidth = 25, tileHeight = 36
 
   shuffleAllTiles(tiles.value)
@@ -73,7 +69,7 @@ function resetGame() {
 
 }
 
-function shuffleAllTiles(arr: Array<number | undefined>) {
+function shuffleAllTiles(arr: Array<Tile | undefined>) {
 // Fisher-Yates Shuffle
   for (let i = arr.length - 1; i > 0; i--) {
     const j = Math.floor(Math.random() * (i + 1));
