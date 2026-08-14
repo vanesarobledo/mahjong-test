@@ -41,6 +41,21 @@ function bringToFront(tile) {
   tiles.value.push(tile)
 }
 
+function orderTiles() {
+  const board = boardRef.value;
+  const boardWidth = board.clientWidth
+  const boardHeight = board.clientHeight
+  const tileWidth = 25, tileHeight = 36
+
+  tiles.value.forEach(tile => {
+    const pos = getInitializedPosition(tile.id)
+    tile.rotationY = 0
+    tile.isFaceUp = false
+    tile.x = pos.x
+    tile.y = pos.y
+  })
+}
+
 function resetGame() {
   const board = boardRef.value;
   const boardWidth = board.clientWidth
@@ -72,6 +87,7 @@ function shuffleAllTiles(arr: Array<number | undefined>) {
   <h1>Mahjong Test</h1>
 
   <button @click="resetGame()">Shuffle Tiles</button>
+  <button @click="orderTiles()">Order Tiles</button>
 
   <div ref="board" class="board">
     <TileDraggable
