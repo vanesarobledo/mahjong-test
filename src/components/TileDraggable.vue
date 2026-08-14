@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import {useDraggable} from "@vueuse/core";
-import {useTemplateRef} from "vue";
+import {useTemplateRef, watch} from "vue";
 
 const props = defineProps<{
   initialX: number
@@ -11,12 +11,19 @@ const props = defineProps<{
 const emit = defineEmits<{ (e: 'pick'): void }>()
 
 const el = useTemplateRef('el')
-const { x, y, style } = useDraggable(el, {
+const { x, y, position, style } = useDraggable(el, {
   initialValue: { x: props.initialX, y: props.initialY },
   containerElement: () => props.containerRef,
   preventDefault: true,
   onStart: () => emit('pick'),
 })
+
+watch(
+    [() => props.initialX, () => props.initialY],
+    ([newX, newY]) => {
+      position.value = { x: newX, y: newY}
+    }
+)
 
 </script>
 

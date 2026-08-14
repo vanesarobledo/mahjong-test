@@ -5,13 +5,16 @@ import TileDraggable from "@/components/TileDraggable.vue";
 
 const boardRef = useTemplateRef('board')
 const tiles = ref(
-    Tiles.map(t => (
-        {
-          ...t,
-          rotationY: 0,
-          isFaceUp: true
-        }
-    ))
+    Tiles.map((t, index) => {
+      const pos = getInitializedPosition(index)
+      return {
+        ...t,
+        rotationY: 0,
+        isFaceUp: false,
+        x: pos.x,
+        y: pos.y,
+      }
+    })
 )
 
 const TILE_SPACING_X = 30
@@ -34,8 +37,33 @@ function flipTile(tile) {
 
 function bringToFront(tile) {
   const index = tiles.value.indexOf(tile);
-  tile.value.splice(index, 1)
-  tile.value.push(tile)
+  tiles.value.splice(index, 1)
+  tiles.value.push(tile)
+}
+
+function resetGame() {
+  const board = boardRef.value;
+  const boardWidth = board.clientWidth
+  const boardHeight = board.clientHeight
+  const tileWidth = 25, tileHeight = 36
+
+  shuffleAllTiles(tiles.value)
+
+  tiles.value.forEach(tile => {
+    tile.isFaceUp = false
+    tile.rotationY = 180
+    tile.x = Math.random() * (boardWidth - tileWidth)
+    tile.y = Math.random() * (boardHeight - tileHeight)
+  })
+
+}
+
+function shuffleAllTiles(arr: Array<number | undefined>) {
+// Fisher-Yates Shuffle
+  for (let i = arr.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [arr[i], arr[j]] = [arr[j], arr[i]]
+  }
 }
 
 </script>
@@ -43,14 +71,16 @@ function bringToFront(tile) {
 <template>
   <h1>Mahjong Test</h1>
 
+  <button @click="resetGame()">Shuffle Tiles</button>
+
   <div ref="board" class="board">
     <TileDraggable
-        v-for="(tile, index) in tiles"
+        v-for="tile in tiles"
         :key="tile.id"
         :container-ref="boardRef"
         class="tile"
-        :initial-x="getInitializedPosition(index).x"
-        :initial-y="getInitializedPosition(index).y"
+        :initial-x="tile.x"
+        :initial-y="tile.y"
         :prevent-default="true"
         @click="flipTile(tile)"
         @pick="bringToFront(tile)"
