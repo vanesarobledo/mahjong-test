@@ -32,6 +32,12 @@ function flipTile(tile) {
   tile.rotationY = tile.isFaceUp ? 0: 180
 }
 
+function bringToFront(tile) {
+  const index = tiles.value.indexOf(tile);
+  tile.value.splice(index, 1)
+  tile.value.push(tile)
+}
+
 </script>
 
 <template>
@@ -41,12 +47,13 @@ function flipTile(tile) {
     <TileDraggable
         v-for="(tile, index) in tiles"
         :key="tile.id"
+        :container-ref="boardRef"
         class="tile"
         :initial-x="getInitializedPosition(index).x"
         :initial-y="getInitializedPosition(index).y"
         :prevent-default="true"
         @click="flipTile(tile)"
-        :container-ref="boardRef"
+        @pick="bringToFront(tile)"
     >
       <div
           class="tile-3d"
