@@ -18,11 +18,13 @@ const tiles = ref(
     })
 )
 
-const TILE_SPACING_X = 30
-const TILE_SPACING_Y = 45
+const TILE_WIDTH = 50, TILE_HEIGHT = 72
+const TILE_PADDING = 10
 const TILES_PER_ROW = 14
 
 function getInitializedPosition(index : number) {
+  let TILE_SPACING_X = TILE_WIDTH + (TILE_PADDING - 1)
+  let TILE_SPACING_Y = TILE_HEIGHT
   const col = index % TILES_PER_ROW;
   const row = Math.floor(index / TILES_PER_ROW);
   return {
@@ -56,15 +58,14 @@ function resetGame() {
   const board = boardRef.value;
   const boardWidth = board ? board.clientWidth : 800;
   const boardHeight = board ? board.clientHeight : 1000;
-  const tileWidth = 25, tileHeight = 36
 
   shuffleAllTiles(tiles.value)
 
   tiles.value.forEach(tile => {
     tile.isFaceUp = false
     tile.rotationY = 180
-    tile.x = Math.random() * (boardWidth - tileWidth)
-    tile.y = Math.random() * (boardHeight - tileHeight)
+    tile.x = Math.random() * (boardWidth - TILE_WIDTH)
+    tile.y = Math.random() * (boardHeight - TILE_HEIGHT)
   })
 
 }
@@ -119,8 +120,8 @@ function shuffleAllTiles(arr: Array<Tile | undefined>) {
 }
 .tile {
   position: absolute;
-  width: 25px;
-  height: 36px;
+  width: v-bind('TILE_WIDTH + `px`');
+  height: v-bind('TILE_HEIGHT + `px`');
 }
 .tile-3d {
   position: relative;
@@ -133,15 +134,15 @@ function shuffleAllTiles(arr: Array<Tile | undefined>) {
 .face {
   position: absolute;
   inset: 0;
-  border-radius: 3px;
-  background: center / contain no-repeat;
+  border-radius: 4px;
+  background: center / auto no-repeat;
   backface-visibility: hidden;
-  box-shadow: 1px 1px rgba(0, 0, 0, 0.3);
+  padding: v-bind('TILE_PADDING + `px`');
+  box-shadow: inset 1px 1px 1px 1px rgba(0, 0, 0, 0.2);
 }
 
 .front {
   background-image: url('/img/tiles/Front.svg');
-  padding: 5px;
 }
 
 .front img {
