@@ -11,6 +11,7 @@ const tiles = ref(
       return {
         ...t,
         rotationY: 0,
+        rotationZ: 0,
         isFaceUp: false,
         x: pos.x,
         y: pos.y,
@@ -36,6 +37,10 @@ function getInitializedPosition(index : number) {
 function flipTile(tile : Tile) {
   tile.isFaceUp = !tile.isFaceUp
   tile.rotationY = tile.isFaceUp ? 0: 180
+}
+
+function rotateTile(tile : Tile) {
+  tile.rotationZ = (tile.rotationZ ?? 0) === 0 ? 90 : 0;
 }
 
 function bringToFront(tile : Tile) {
@@ -96,11 +101,12 @@ function shuffleAllTiles(arr: Array<Tile | undefined>) {
         :initial-y="tile.y"
         :prevent-default="true"
         @click="flipTile(tile)"
+        @contextmenu.prevent="rotateTile(tile)"
         @pick="bringToFront(tile)"
     >
       <div
           class="tile-3d"
-          :style="{ transform: `rotateY(${tile.rotationY}deg)` }"
+          :style="{ transform: `rotateY(${tile.rotationY}deg) rotateZ(${tile.rotationZ}deg)` }"
       >
         <div class="face front">
           <img :src="tile.src" :alt="tile.name" />

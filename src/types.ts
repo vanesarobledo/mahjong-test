@@ -3,6 +3,7 @@ export type Tile = {
     src: string;
     name: string;
     rotationY: number;
+    rotationZ: number;
     isFaceUp: boolean;
     x: number,
     y: number,
